@@ -5,10 +5,11 @@ import telebot
 from auth_data import token
 from telebot import types
 def get_data():
-    req = requests.get("https://yobit.net/api/3/ticker/btc_usd")
-    response = req.json()
-    sell_price = response["btc_usd"]["sell"]
-    print(f"{datetime.now().strftime('%d-%m-%Y     %H:%M')}\nSell BTC price:{sell_price}")
+    r = "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"
+    r = requests.get(r)
+    data = r.json()
+    price = data["price"]
+    print(f"{datetime.now().strftime('%d-%m-%Y     %H:%M')}\nSell BTC price:{price}")
 
 def telegram_bot(token):
     bot = telebot.TeleBot(token)
@@ -24,13 +25,14 @@ def telegram_bot(token):
     def send_text(message):
         if message.chat.type == "private":
             if message.text == 'Курс биткоина':
-                req = requests.get("https://yobit.net/api/3/ticker/btc_usd")
-                response = req.json()
-                sell_price = response["btc_usd"]["sell"]
+                r = "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"
+                r = requests.get(r)
+                data = r.json()
+                price = data["price"]
+                price1 = price[:9]
                 bot.send_message(
-                    message.chat.id,
-                    f"{datetime.now().strftime('%d-%m-%Y     %H:%M')}\nSell BTC price: {sell_price}"
-                )
+                    message.chat.id, f"{datetime.now().strftime('%d-%m-%Y      %H:%M')}\nSell BTC price: {price1}")
+
             elif message.text == 'Гороскоп':
                 markup = types.ReplyKeyboardMarkup(resize_keyboard = True)
                 fish = types.KeyboardButton('Рыбы')
