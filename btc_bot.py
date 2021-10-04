@@ -148,7 +148,7 @@ def telegram_bot(token):
                 bot.send_message(
                     message.chat.id, f"{str(s.text)}"
                     )
-                    
+
             elif message.text == 'Погода':
                 markup = types.ReplyKeyboardMarkup(resize_keyboard = True)
                 msk = types.KeyboardButton('Москва')
@@ -164,7 +164,7 @@ def telegram_bot(token):
                 s = get_weather(g)
                 bot.send_message(
                     message.chat.id, f"***{datetime.now().strftime('%Y-%m-%d %H:%M')}***\n"
-                                    f"Погода в городе: Москва\nТемпература: {s[1]}C°\n"
+                                    f"Погода в городе: {s[0]}\nТемпература: {s[1]}C°\n"
                                     f"Влажность: {s[3]}%\nДавление: {s[4]} мм.рт.ст\nВетер: {s[5]} м/с\n"
                                     f"Восход солнца: {s[6]}\nЗакат солнца: {s[7]}\nПродолжительность дня: {s[8]}\n"
                                     f"Хорошего дня!"
@@ -175,7 +175,7 @@ def telegram_bot(token):
                 s = get_weather(g)
                 bot.send_message(
                     message.chat.id, f"***{datetime.now().strftime('%Y-%m-%d %H:%M')}***\n"
-                                    f"Погода в городе: Москва\nТемпература: {s[1]}C°\n"
+                                    f"Погода в городе: {s[0]}\nТемпература: {s[1]}C°\n"
                                     f"Влажность: {s[3]}%\nДавление: {s[4]} мм.рт.ст\nВетер: {s[5]} м/с\n"
                                     f"Восход солнца: {s[6]}\nЗакат солнца: {s[7]}\nПродолжительность дня: {s[8]}\n"
                                     f"Хорошего дня!"
@@ -186,7 +186,7 @@ def telegram_bot(token):
                 s = get_weather(g)
                 bot.send_message(
                     message.chat.id, f"***{datetime.now().strftime('%Y-%m-%d %H:%M')}***\n"
-                                    f"Погода в городе: Москва\nТемпература: {s[1]}C°\n"
+                                    f"Погода в городе: {s[0]}\nТемпература: {s[1]}C°\n"
                                     f"Влажность: {s[3]}%\nДавление: {s[4]} мм.рт.ст\nВетер: {s[5]} м/с\n"
                                     f"Восход солнца: {s[6]}\nЗакат солнца: {s[7]}\nПродолжительность дня: {s[8]}\n"
                                     f"Хорошего дня!"
@@ -196,7 +196,7 @@ def telegram_bot(token):
                 s = get_weather(g)
                 bot.send_message(
                     message.chat.id, f"***{datetime.now().strftime('%Y-%m-%d %H:%M')}***\n"
-                                    f"Погода в городе: Москва\nТемпература: {s[1]}C°\n"
+                                    f"Погода в городе: {s[0]}\nТемпература: {s[1]}C°\n"
                                     f"Влажность: {s[3]}%\nДавление: {s[4]} мм.рт.ст\nВетер: {s[5]} м/с\n"
                                     f"Восход солнца: {s[6]}\nЗакат солнца: {s[7]}\nПродолжительность дня: {s[8]}\n"
                                     f"Хорошего дня!"
