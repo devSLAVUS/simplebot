@@ -48,7 +48,7 @@ def telegram_bot(token):
                 bot.send_message(message.chat.id,'Гороскоп', reply_markup = markup)
             elif message.text == 'Информация':
 
-                inf = "**Slavus Laboratories introduce**\nbot: lab_slavus\nVersion: 1.03\nLast Update: 05.10.21\nТекстовые функции:\n1. Перевод в Чизбургеры:\n   Введите команду cheese ЧИСЛО\n   В ответе получите количество чизбургеров "  
+                inf = "**Slavus Laboratories introduce**\nbot: lab_slavus\nVersion: 1.03\nLast Update: 05.10.21\nТекстовые функции:\n1. Перевод в Чизбургеры:\n   Введите команду -сыр- ЧИСЛО\n   В ответе получите количество чизбургеров "  
                 bot.send_message(
                     message.chat.id, inf
                     )
@@ -60,6 +60,7 @@ def telegram_bot(token):
                 pogoda = types.KeyboardButton('Погода')
                 markup.add(bitcoin, goroscope, pogoda, info)
                 bot.send_message(message.chat.id, "Welcome back! investor {0.first_name}!".format(message.from_user), reply_markup = markup)
+                
             elif message.text == 'Весы':
                 zn = "libra"
                 s = get_all(zn)         
@@ -186,7 +187,7 @@ def telegram_bot(token):
                                     f"Хорошего дня!"
                                 )
     
-            elif 'cheese' in message.text.lower():
+            elif 'сыр' in message.text.lower():
                 arg = message.text.split(maxsplit=1)[1]
                 kurs = int(arg)/50
                 if arg.isdigit():
