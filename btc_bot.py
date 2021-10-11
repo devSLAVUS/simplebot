@@ -4,7 +4,7 @@ from datetime import datetime
 import telebot
 from auth_data import token
 from telebot import types
-from giro import get_all, get_weather
+from giro import get_all, get_weather, maska
 
 def telegram_bot(token):
     bot = telebot.TeleBot(token)
@@ -17,8 +17,17 @@ def telegram_bot(token):
         pogoda = types.KeyboardButton('Погода')
         markup.add(bitcoin, goroscope, pogoda, info)
         bot.send_message(message.chat.id, "Greetings, investor {0.first_name}!".format(message.from_user), reply_markup = markup)
+    @bot.message_handler(commands=['m'])
+    def handle_text(message):
+        bot.send_message(message.chat.id, "Введите данные:")
+        bot.register_next_step_handler(message, print_mask)
+    def print_mask(message):
+        txt = message.text
+        s = maska(txt)
+        bot.send_message(message.chat.id, s)
     @bot.message_handler(content_types=["text"])
     def send_text(message):
+        
         if message.chat.type == "private":
             if message.text == 'Курс биткоина':
                 r = "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"
@@ -48,7 +57,16 @@ def telegram_bot(token):
                 bot.send_message(message.chat.id,'Гороскоп', reply_markup = markup)
             elif message.text == 'Информация':
 
-                inf = "**Slavus Laboratories introduce**\nbot: lab_slavus\nVersion: 1.03\nLast Update: 05.10.21\nТекстовые функции:\n1. Перевод в Чизбургеры:\n   Введите команду -сыр- ЧИСЛО\n   В ответе получите количество чизбургеров "  
+                inf = "**Slavus Laboratories introduce**\n\
+bot: lab_slavus\n\
+Version: 1.5 stable\n\
+Last Update: 05.10.21\n\
+Текстовые функции:\n\
+1. Перевод в Чизбургеры:\n\
+   = Введите команду -сыр- ЧИСЛО\n\
+   = В ответе получите количество чизбургеров\n\
+2. Узнать ip маски под сети:\n\
+   = команда /m и номер маски"  
                 bot.send_message(
                     message.chat.id, inf
                     )
@@ -198,7 +216,7 @@ def telegram_bot(token):
                     bot.send_message(
                             message.chat.id, "После команды cheese введите число!"
                             )
-               
+            
     bot.polling()
 if __name__ == '__main__':
     telegram_bot(token)
