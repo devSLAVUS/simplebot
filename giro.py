@@ -1,6 +1,16 @@
 from bs4 import BeautifulSoup
 import requests
 from datetime import datetime
+import os
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.utils import ChromeType
+import time
+import datetime
+from pyvirtualdisplay import Display
+from auth_data import log, pas
+
 def get_all(znak):
             vesi = f"https://horo.mail.ru/prediction/{znak}/today/"
             request_vesi = requests.get(vesi)
@@ -19,9 +29,9 @@ def get_weather(gorod):
             pressure = data["main"]["pressure"]
             wind = data["wind"]["speed"]
             wd = "Посмотри в окно, не пойму что там за погода!"
-            sunrise_timestamp = datetime.fromtimestamp(data["sys"]["sunrise"])
-            sunset_timestamp = datetime.fromtimestamp(data["sys"]["sunset"])
-            length_of_the_day = datetime.fromtimestamp(data["sys"]["sunset"]) - datetime.fromtimestamp(data["sys"]["sunrise"])
+            sunrise_timestamp = datetime.datetime.fromtimestamp(data["sys"]["sunrise"])
+            sunset_timestamp = datetime.datetime.fromtimestamp(data["sys"]["sunset"])
+            length_of_the_day = datetime.datetime.fromtimestamp(data["sys"]["sunset"]) - datetime.datetime.fromtimestamp(data["sys"]["sunrise"])
             open_weather = [city, cur_weather, weather_description, humidity, pressure, wind, sunrise_timestamp, sunset_timestamp, length_of_the_day]
             return open_weather
 def maska(nums):
@@ -65,3 +75,70 @@ def maska(nums):
     vivod = pool.get(nums, "Не найден")
     print (vivod)
     return "Маска: {}\nКоличество адресов: {}".format(vivod[0], vivod[1])
+
+def download_image(dasboard, panelId, user_id):
+#   time offsets
+    six_hours = datetime.timedelta(hours=6)
+    twelve_hours = datetime.timedelta(hours=12)
+
+#   human date
+    now = datetime.datetime.now()
+    now6 = datetime.datetime.now() - six_hours
+    now12 = datetime.datetime.now() - twelve_hours
+
+    stimpenow = str(time.mktime(now.timetuple())).split('.')[0] + str(float(now.microsecond) / 1000000).split('.')[1][0:3]
+    stimpe6 = str(time.mktime(now6.timetuple())).split('.')[0] + str(float(now.microsecond) / 1000000).split('.')[1][0:3]
+    stimpe12 = str(time.mktime(now12.timetuple())).split('.')[0] + str(float(now.microsecond) / 1000000).split('.')[1][0:3]
+    url6 = grafana_url + '/render/dashboard-solo/db/' + dasboard + '?orgId=1&from=' + stimpe6 + '&to=' + stimpenow + '&panelId=' + panelId + '&width=1000&height=500'
+    url12 = grafana_url + '' + dasboard + '?orgId=1&from=' + stimpe12 + '&to=' + stimpenow + '&panelId=' + panelId + '&width=1000&height=500'
+    for url in url6, url12:
+        now = datetime.datetime.now()
+        filedate = now.strftime("%Y%m%d_%I-%M-%S-%m")
+        r = requests.get(url, verify = False, headers = headers, timeout = 30)
+        folder = path + str(user_id) + "/"
+        if os.path.exists(folder) is False:
+            os.mkdir(folder)
+        out = open(folder + str(dasboard) + "_" + filedate + ".png", "wb")
+        out.write(r.content)
+        out.close()
+        time.sleep(0.12)
+
+def get_pic():
+    six_hours = datetime.timedelta(hours=6)
+    twelve_hours = datetime.timedelta(hours=12)
+    now = datetime.datetime.now()
+    now6 = datetime.datetime.now() - six_hours
+    now12 = datetime.datetime.now() - twelve_hours
+
+    stimpenow = str(time.mktime(now.timetuple())).split('.')[0] + str(float(now.microsecond) / 1000000).split('.')[1][0:3]
+    stimpe6 = str(time.mktime(now6.timetuple())).split('.')[0] + str(float(now.microsecond) / 1000000).split('.')[1][0:3]
+    stimpe12 = str(time.mktime(now12.timetuple())).split('.')[0] + str(float(now.microsecond) / 1000000).split('.')[1][0:3]
+    display = Display(visible=0, size=(800, 600))
+    display.start()
+    try:
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument('--no-sandbox')
+
+        if os.environ.get('SERVER_ENV') == 'local':
+            driver = webdriver.Chrome(ChromeDriverManager(chrome_type=ChromeType.GOOGLE, cache_valid_range=5).install(), options=chrome_options)
+        else:
+            # driver = webdriver.Chrome(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM, cache_valid_range=5).install(), options=chrome_options)
+            driver = webdriver.Chrome(executable_path='/snap/bin/chromium.chromedriver', options=chrome_options)
+
+        driver.get(f'http://10.78.203.228:3000/d-solo/TTU8t0Dnz/otrs-titans?orgId=1&from={stimpe6}&to={stimpenow}&panelId=2')
+        login_in = driver.find_element_by_name("user")
+        pass_in = driver.find_element_by_name("password")
+        login_in.clear()
+        login_in.send_keys(log)
+        pass_in.clear()
+        pass_in.send_keys(pas)
+        but_in = driver.find_element_by_class_name("css-w9m50q-button").click()
+        time.sleep(2)
+        driver.save_screenshot("/home/devslavus/reenshot.png")
+        driver.quit()
+    
+    except Exception as e:
+        print('Ошибка при сохранении скриншота: {}'.format(e))
+    display.stop()
+
