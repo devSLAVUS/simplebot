@@ -124,7 +124,7 @@ def get_pic():
             driver = webdriver.Chrome(ChromeDriverManager(chrome_type=ChromeType.GOOGLE, cache_valid_range=5).install(), options=chrome_options)
         else:
             # driver = webdriver.Chrome(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM, cache_valid_range=5).install(), options=chrome_options)
-            driver = webdriver.Chrome(executable_path='/snap/bin/chromium.chromedriver', options=chrome_options)
+            driver = webdriver.Chrome(executable_path='/usr/bin/chromedriver', options=chrome_options)
 
         driver.get(f'http://10.78.203.228:3000/d-solo/TTU8t0Dnz/otrs-titans?orgId=1&from={stimpe6}&to={stimpenow}&panelId=2')
         login_in = driver.find_element_by_name("user")
@@ -163,7 +163,7 @@ def get_graf():
             driver = webdriver.Chrome(ChromeDriverManager(chrome_type=ChromeType.GOOGLE, cache_valid_range=5).install(), options=chrome_options)
         else:
             # driver = webdriver.Chrome(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM, cache_valid_range=5).install(), options=chrome_options)
-            driver = webdriver.Chrome(executable_path='/snap/bin/chromium.chromedriver', options=chrome_options)
+            driver = webdriver.Chrome(executable_path='/usr/bin/chromedriver', options=chrome_options)
 
         driver.get(f'http://10.78.203.228:3000/d-solo/TTU8t0Dnz/otrs-titans?orgId=1&from={stimpe12}&to={stimpenow}&panelId=10')
         login_in = driver.find_element_by_name("user")
